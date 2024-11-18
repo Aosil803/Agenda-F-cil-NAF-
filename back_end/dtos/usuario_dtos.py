@@ -2,44 +2,44 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-# DTO para criar campos de endereço
-class CamposEndereco(BaseModel):
-    cep: str
-    rua: str
-    numero: int
-    bairro: str
-    complemento: Optional[str] = None  # Campo opcional
-    cidade: str
-    estado: str
-    
-
-    class Config:
-        from_attributes = True
-
-
 # DTO para criação de um novo usuário
 class UsuarioCriar(BaseModel):
     nome: str
+    perfil: str
     email: str
     cpf: str
-    telefone: str
-    endereco: CamposEndereco 
-    perfil: str
     senha: str
-    data_criacao: datetime = datetime.utcnow()
+    cep: str
+    rua: str
+    numero: str
+    bairro: str
+    complemento: Optional[str] = None
+    cidade: str
+    estado: str
+    telefone: str
 
     class Config:
-       from_attributes = True
-
+        from_attributes = True
+        orm_mode = True
 
 # DTO Base para retornar dados de usuários (sem expor informações sensíveis)
 class UsuarioBase(BaseModel):
     id: int
     nome: str
-    email: str
-    endereco: CamposEndereco 
     perfil: str
+    email: str
+    cpf: str
+    senha: str
+    cep: str
+    rua: str
+    numero: str
+    bairro: str
+    complemento: Optional[str] = None
+    cidade: str
+    estado: str
+    telefone: str
     data_criacao: datetime
 
     class Config:
-        from_attributes = True  
+        from_attributes = True
+        orm_mode = True

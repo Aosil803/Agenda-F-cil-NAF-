@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from back_end.create_db import create_tables  # Importe a função de criação de tabelas
-from back_end.routes.usuario import router as usuario_rotas
+from back_end.routas.usuario_rotas import router as usuario_rotas
 
 app = FastAPI()
 
