@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+
 # DTO para criação de um novo AdminNaf
 class AdminNafCriar(BaseModel):
     matricula: str
@@ -11,7 +12,7 @@ class AdminNafCriar(BaseModel):
         orm_mode = True
 
 # DTO Base para retornar dados de usuários
-class AdninNafBase(BaseModel):
+class AdminNafBase(BaseModel):
     id:int
     matricula: str
     email: str
