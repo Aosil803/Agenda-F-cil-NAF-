@@ -26,6 +26,10 @@ try:
 except Exception as e:
     print("ERRO: Falha ao criar Banco de Dados!")
 
+# Importar os modelos para garantir que o SQLAlchemy registre as tabelas
+from back_end.models.usuario_models import Usuario  # Certifique-se de que os modelos estão importados
+from back_end.models.adminNaf_models import AdminNaf  # Importa a tabela AdminNaf
+
 # Função para criar as tabelas
 def create_tables():
     try:
@@ -33,7 +37,8 @@ def create_tables():
         print("Tabelas criadas com sucesso!")
     except Exception as e:
         print(f"Erro ao criar tabelas: {str(e)}")
-        
+
+# Função para obter a sessão do banco de dados
 def get_db():
     db = SessionLocal()
     try:
