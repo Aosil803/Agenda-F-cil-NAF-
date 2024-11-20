@@ -36,6 +36,7 @@ async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)
 
         # Criar novo administrador
         novo_admin = AdminNaf(
+            nome=adminNaf.nome,
             matricula=adminNaf.matricula,
             email=adminNaf.email,
             senha=adminNaf.senha,

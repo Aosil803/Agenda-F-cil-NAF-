@@ -3,6 +3,7 @@ from datetime import datetime
 
 # DTO para criação de um novo AdminNaf
 class AdminNafCriar(BaseModel):
+    nome: str
     matricula: str
     email: str
     perfil: str
@@ -14,6 +15,7 @@ class AdminNafCriar(BaseModel):
 # DTO Base para retornar dados de usuários
 class AdminNafBase(BaseModel):
     id:int
+    nome: str
     matricula: str
     email: str
     perfil: str
