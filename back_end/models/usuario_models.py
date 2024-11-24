@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, Date
 from back_end.create_db import Base
 
 # Modelo Usuario
@@ -9,7 +9,7 @@ class Usuario(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
     perfil = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
+    email = Column(String, nullable=False)
     cpf = Column(String, unique=True, nullable=False)
     senha = Column(String, nullable=False)
     cep = Column(String, nullable=False)
@@ -20,5 +20,5 @@ class Usuario(Base):
     cidade = Column(String, nullable=False)
     estado = Column(String, nullable=False)
     telefone = Column(String, nullable=True)
-    data_criacao = Column(DateTime, default=datetime.utcnow)
+    data_criacao = Column(Date, default=datetime.utcnow)
 
