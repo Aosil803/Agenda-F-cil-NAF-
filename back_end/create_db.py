@@ -28,8 +28,9 @@ except Exception as e:
 
 # Importar os modelos para garantir que o SQLAlchemy registre as tabelas
 from back_end.models.usuario_models import Usuario  
-from back_end.models.adminNaf_models import AdminNaf  
-from back_end.models.agenda_models import Agenda
+#from back_end.models.adminNaf_models import AdminNaf  
+#from back_end.models.agenda_models import Agenda
+
 # Função para criar as tabelas
 def create_tables():
     try:
