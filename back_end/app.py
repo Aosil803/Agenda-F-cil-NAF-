@@ -1,7 +1,8 @@
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
-from back_end.create_db import create_tables  # Função para criação de tabelas
+from back_end.create_db import create_tables  
+from back_end.route.adminNaf_route import router as adminNaf_route
 from back_end.route.usuario_route import router as usuario_route
 from back_end.utils.error_handlers import http_exception_handler, validation_exception_handler  # Importando os handlers
 
@@ -18,7 +19,7 @@ async def startup():
 
 # Inclui as rotas
 app.include_router(usuario_route)
-# app.include_router(adminNaf_route)
+app.include_router(adminNaf_route)
 # app.include_router(agenda_route)
 
 # Adiciona os handlers de erro ao FastAPI

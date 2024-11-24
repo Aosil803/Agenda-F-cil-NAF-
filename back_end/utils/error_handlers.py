@@ -28,7 +28,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 # Handler para erros de validação de requisição
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     # Extraímos os erros diretamente, sem a necessidade de um loop
-    error_messages = [f"Campo '{err['loc'][-1]}' inválido: {err['msg']}" for err in exc.errors()]
+    error_messages = [f"Campo '{err['loc'][-1]}' inválido ou inexistente: {err['msg']}" for err in exc.errors()]
     
     logger.error(f"Erro de validação: {error_messages}")
     return JSONResponse(

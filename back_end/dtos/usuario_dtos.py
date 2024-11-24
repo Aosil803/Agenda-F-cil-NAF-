@@ -22,25 +22,6 @@ class UsuarioCriar(BaseModel):
     class Config:
         orm_mode = True  # Permite integração direta com modelos ORM (banco de dados)
 
-# DTO para atualização de usuário (PUT) que herda de UsuarioCriar
-class UsuarioAtualizar(BaseModel):
-    # Alterando todos os campos para Optional com base nos campos de UsuarioCriar
-    nome: Optional[str] = None
-    perfil: Optional[str] = None
-    email: Optional[str] = None
-    cpf: Optional[str] = None
-    telefone: Optional[str] = None
-    senha: Optional[str] = None
-    cep: Optional[str] = None
-    rua: Optional[str] = None
-    numero: Optional[str] = None
-    bairro: Optional[str] = None
-    complemento: Optional[str] = None
-    cidade: Optional[str] = None
-    estado: Optional[str] = None
-
-    class Config:
-        orm_mode = True  # Permite integração direta com modelos ORM (banco de dados)
 
 # DTO de saída (para resposta com a data formatada e o ID no topo)
 class UsuarioResposta(UsuarioCriar):
@@ -53,8 +34,6 @@ class UsuarioResposta(UsuarioCriar):
             return v.strftime('%d/%m/%Y')
         return v  # Se já for string, retorna como está
     
-    
-
     class Config:
         from_attributes = True  # Garante compatibilidade com objetos do ORM
         orm_mode = True
