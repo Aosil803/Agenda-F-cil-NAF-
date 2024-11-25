@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from datetime import datetime
+
 
 # Caminho absoluto para o banco de dados na raiz do projeto
 db_path = os.path.join(os.path.dirname(__file__), '..', 'NAF_agenda.db')
@@ -28,8 +28,8 @@ except Exception as e:
 
 # Importar os modelos para garantir que o SQLAlchemy registre as tabelas
 from back_end.models.usuario_models import Usuario  
-#from back_end.models.adminNaf_models import AdminNaf  
-#from back_end.models.agenda_models import Agenda
+from back_end.models.adminNaf_models import AdminNaf  
+from back_end.models.agenda_models import Agenda
 
 # Função para criar as tabelas
 def create_tables():

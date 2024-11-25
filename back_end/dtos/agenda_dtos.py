@@ -1,33 +1,38 @@
-# from pydantic import BaseModel
-# from datetime import datetime
+from datetime import date
+from pydantic import BaseModel, validator
+from typing import Optional
 
+class AgendamentoCriar(BaseModel):
+    id: Optional[int] = None
+    ano: int
+    mes: str
+    dia: int
+    hora: str  # Hora armazenada como string
+    turno: str
+    status: bool
+    
+    class Config:
+        from_attributes = True  # Atualização para Pydantic V2
+        
+class UsuarioAgendamento(BaseModel):
+    ano: int
+    mes: str
+    dia: int
+    hora: str
+    turno: str
 
-# # DTO para criação de um novo Agendamento
-# class AgendaCriar(BaseModel):
-#     id: int
-#     ano: int
-#     mes: str
-#     dia: datetime
-#     hora: int
-#     turno: str
-#     status: bool
-#     usuario_id: int
+    class Config:
+        from_attributes = True  # Atualização para Pydantic V2
 
-# class Config:
-#         from_attributes = True
-#         orm_mode = True
+class AgendamentoResposta(AgendamentoCriar):
+    data_criacao: str  # Vai ser retornada como string
 
-# # DTO Base para retornar dados de agendamento
-# class AgendaBase(BaseModel):
-#     id: int
-#     ano: int
-#     mes: str
-#     dia: datetime
-#     hora: int
-#     turno: str
-#     status: bool
-#     usuario_id: int
-
-#     class Config:
-#         from_attributes = True
-#         orm_mode = True
+    @validator('data_criacao', pre=True)
+    def format_data_criacao(cls, v):
+        # Certifica-se que a data seja formatada corretamente para o formato DD/MM/YYYY
+        if isinstance(v, date):
+            return v.strftime('%d/%m/%Y')
+        return v  # Se já for string, retorna como está
+    
+    class Config:
+        from_attributes = True  # Atualização para Pydantic V2

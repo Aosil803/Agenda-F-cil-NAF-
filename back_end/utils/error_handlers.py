@@ -2,11 +2,23 @@ import logging
 from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from datetime import datetime
 
 # Configuração do logging
 logger = logging.getLogger(__name__)
 
+# Função de validação de hora
+def validar_hora(hora: str) -> str:
+    try:
+        # Valida e converte a hora para time usando datetime
+        hora_valida = datetime.strptime(hora, '%H:%M').time()
+        return hora_valida.strftime('%H:%M')  # Retorna a hora como string formatada
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato de hora inválido. Use HH:MM.")
 
+# Função para tratar erro de horário não disponível
+def horario_nao_disponivel():
+    raise HTTPException(status_code=404, detail="Horário não disponível ou já reservado.")
 
 # Handler genérico para HTTPException (outros erros 400, 404, etc.)
 async def http_exception_handler(request: Request, exc: HTTPException):
