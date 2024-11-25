@@ -1,6 +1,3 @@
-<!doctype html>
-<html lang="pt-BR">
-
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
@@ -27,7 +24,18 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=lock_person" />
-
+	
+	<!-- Estilos para centralizar o formulário de login -->
+	<style>
+		            .login-form {
+			        max-width: 500px;
+			        margin: 0 auto;
+			        padding: 30px;
+			        border: 1px solid #ddd;
+			        border-radius: 8px;
+			        background-color: #f9f9f9;
+		            }
+	</style>
 </head>
 
 <body>
@@ -48,7 +56,7 @@
 					<li class="nav-item"><a class="nav-link" href="service.html">Serviços</a></li>
 					<li class="nav-item"><a class="nav-link"
 							href="https://www.unifeso.edu.br/fale-conosco.php">Contatos</a></li>
-					<li class="nav-item"><a class="nav-link" href="acessar.html">Acessar</a></li>
+					<li class="nav-item"><a class="nav-link" href=#>Acessar</a></li>
 					<li class="nav-item"><a class="nav-link" href=#>Area NAF</a></li>
 					</a>
 					<span class="material-symbols-outlined">lock_person</span>
@@ -59,7 +67,6 @@
 			</div>
 		</div>
 	</nav>
-
 
 	<!-- Header Close -->
 
@@ -72,101 +79,56 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8">
-						<p class="text-uppercase text-white mb-5" style="text-indent: 40px; text-align: justify;">O
-							Núcleo de Apoio Contábil
-							e Fiscal (NAF) é um projeto desenvolvido pela Receita Federal do Brasil em parceria com
-							instituições de ensino superior. Todos os anos, durante o período de declaração do Imposto
-							de Renda, a agenda fica cheia. Alunos do curso de Ciências Contábeis,
-							acompanhados de
-							professores, dão assistência àqueles que estão com dúvidas ao declarar seu imposto de renda.
-							Com o Agenda fácil agora vc pode fazer seu agendamento pela internet com o Agenda Fácil NAF
-						</p>
-
-						<a href="acessar.html" target="_blank" class="btn btn-main ">Agendar</a>
-						<class="ti-angle-right ml-3></i></a>
-					</div>
-				</div>
-			</div>
-		</section>
+						<p class="text-uppercase text-white mb-5" style="text-indent: 40px; text-align: justify;">
+       
 		<!-- Section Slider End -->
-
-		<!-- Section Intro Start -->
-		<section class="mt-80px">
-			<div class="container">
-				<div class="row ">
-					<div class="col-lg-4 col-md-6">
-						<div class="card p-5 border-0 rounded-top border-bottom position-relative hover-style-1">
-							<span class="number">01</span>
-							<h3 class="mt-3">Para o cidadão</h3>
-							<p class="mt-3 mb-4">Assistência a pessoas físicas de baixa renda levando serviços fiscais
-								relacionados ao CPF, ao imposto de renda, ao e-Social Doméstico, Orientações sobre
-								acordos de transação tributária.</p>
-							<a href="service.html"
-								class="text-color text-uppercase font-size-13 letter-spacing font-weight-bold">Mais
-								detalhes...</a>
+		<!-- Formulário de Login -->
+		<div class="login-form">
+			<h3 class="text-center">Portal de Acesso</h3>
+			<!-- Formulário -->
+			<form>
+				<!-- Campo de E-mail ou CPF -->
+				<div class="form-group">
+					<label for="email">E-mail, Matrícula ou CPF</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-envelope"></i></span>
 						</div>
-					</div>
-					<div class="col-lg-4 col-md-6">
-						<div class="card p-5 border-0 rounded-top hover-style-1">
-							<span class="number">02</span>
-							<h3 class="mt-3">Incritos como MEI</h3>
-							<p class="mt-3 mb-4">Certidão negativa,
-								Consulta de dívidas e pendências fiscais,
-								Geração de documentos para pagamento de impostos,
-								Assistência com a declaração do IR</p>
-							<a href="service.html"
-								class="text-color text-uppercase font-size-13 letter-spacing font-weight-bold">Mais
-								detalhes...</a>
-						</div>
-					</div>
-					<div class="col-lg-4 col-md-6">
-						<div class="card p-5 border-0 rounded-top hover-style-1">
-							<span class="number">03</span>
-							<h3 class="mt-3">Produtores rurais</h3>
-							<p class="mt-3 mb-4">Cadastro Nacional de Imóveis Rurais (CNIR),
-								Serviços relativos ao ITR,
-								Consulta de dívidas e pendências fiscais,
-								Geração de documentos para pagamento de impostos.
-							</p>
-							<a href="service.html"
-								class="text-color text-uppercase font-size-13 letter-spacing font-weight-bold">Saiba
-								mais...</a>
-						</div>
+						<input type="text" class="form-control" id="email" placeholder="E-mail, Matrícula ou CPF">
 					</div>
 				</div>
-			</div>
-		</section>
-		<!-- Section Intro End -->
 
-		<!-- Section About start -->
-		<section class="section about">
-			<div class="container">
-				<div class="row align-items-center">
-					<div class="col-lg-6">
-						<img src="images/bg/atendimento 4.jpg" alt="" class="img-fluid rounded shadow w-100">
-					</div>
-
-					<div class="col-lg-6">
-						<div class="pl-3 mt-5 mt-lg-0">
-							<h3 class="mt-1 mb-3">Os estudantes do <span style="color: #006b65;">NAF</span> podem
-								prestar diversas orientações dos serviços do fisco federal</h3>
-
-							<p class="mb-4" style="text-indent: 40px; text-align: justify;">O NAF do Unifeso está com
-								atendimento aberto à população com menor poder
-								aquisitivo, aos seus colaboradores e estudantes no horário comercial entre segunda e
-								sexta-feira, no Campus Antonio Paulo
-								Capanema de Souza no Alto em Teresópolis. Para receber assistência, os interessados
-								precisam agendar seu atendimento por meio do Agenda Fácil.</p>
-
-							<a href="acessar.html" class="btn btn-main">Agendar<i class="fa fa-angle-right ml-2"></i></a>
+				<!-- Campo de Senha -->
+				<div class="form-group">
+					<label for="senha">Senha</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-lock"></i></span>
 						</div>
+						<input type="password" class="form-control" id="senha" placeholder="Senha">
 					</div>
 				</div>
-			</div>
-		</section>
 
-		<!-- Section Footer Start -->
-		<!-- footer Start -->
+				<!-- Checkbox Manter Conectado -->
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="manterConectado">
+					<label class="form-check-label" for="manterConectado">Manter conectado</label>
+				</div>
+
+				<!-- Botão de Login -->
+				<button type="submit" class="btn btn-custom btn-block">Entrar</button>
+
+				<!-- Link Esqueci a Senha -->
+				<div class="text-center mt-3">
+					<a href="recuperarsenha.html" class="forgot-password">Esqueci a senha</a>
+				</div>
+			</form>
+		</div>
+
+    </section>
+
+<!-- Section Slider End -->
+		<!-- Footer -->
 		<footer class="footer bg-black-50">
 			<div class="container">
 				<div class="row">
@@ -177,12 +139,8 @@
 							aumentando sua demanda nos anos seguintes. O grande salto foi no ano de 2023, quando o
 							NAF superou as expectativas e se mantém entre os top 10 das instituições da 7ª região da
 							Receita Federal
-
-
 						</p>
-
 					</div>
-
 
 					<div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
 						<div class="footer-widget recent-blog">
@@ -200,48 +158,30 @@
 							</div>
 
 						</div>
-					</div>
-					<div class="col-lg-2 col-md-5 mb-5 mb-lg-0">
-						<div class="footer-widget">
-							<h4 class="mb-4 text-white letter-spacing text-uppercase">Quick Links</h4>
-							<ul class="list-unstyled footer-menu lh-40 mb-0">
-								<li><a href="about.html"><i class="ti-angle-double-right mr-2"></i>About Us</a></li>
-								<li><a href="service.html"><i class="ti-angle-double-right mr-2"></i>Services</a></li>
-								<li><a href="pricing.html"><i class="ti-angle-double-right mr-2"></i>Membership</a></li>
-								<li><a href="course.html"><i class="ti-angle-double-right mr-2"></i>Courses</a></li>
-								<li><a href="contact.html"><i class="ti-angle-double-right mr-2"></i>Contact us</a></li>
-							</ul>
-						</div>
+					
 					</div>
 					<div class="col-lg-3 col-md-5">
 						<div class="footer-widget">
 							<h4 class="mb-4 text-white letter-spacing text-uppercase">Localização</h4>
 							<p>Av. Alberto Torres, 111 - Alto - Teresópolis </p>
 							<span class="text-white">(21) 2641-7074</span>
-							<span class="text-white">info@demolink.org</span>
+
 						</div>
 					</div>
 				</div>
 
 			</div>
 		</footer>
-		<!-- Section Footer End -->
-
-		<!-- Section Footer Scripts -->
 	</div>
 
-	<!-- 
-    Essential Scripts
-    =====================================-->
-
-
+	<!-- Essential Scripts -->
 	<!-- Main jQuery -->
 	<script src="plugins/jquery/jquery.js"></script>
 	<!-- Bootstrap 4.3.1 -->
 	<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 	<!-- Slick Slider -->
 	<script src="plugins/slick-carousel/slick/slick.min.js"></script>
-	<!--  Magnific Popup-->
+	<!-- Magnific Popup-->
 	<script src="plugins/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
 	<!-- Form Validator -->
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.32/jquery.form.js"></script>
