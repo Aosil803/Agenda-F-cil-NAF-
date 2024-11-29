@@ -7,6 +7,7 @@ from back_end.route.usuario_route import router as usuario_route
 from back_end.route.agenda_route import router as agenda_route
 from back_end.utils.error_handlers import http_exception_handler, validation_exception_handler  # Importando os handlers
 
+# Instanciação do aplicativo FastAPI
 app = FastAPI()
 
 # Configuração do logging
@@ -18,11 +19,11 @@ logger = logging.getLogger(__name__)
 async def startup():
     create_tables()  # Cria as tabelas quando o aplicativo for iniciado
 
-# Inclui as rotas
+# Registro dos handlers de exceção
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+
+# Inclusão das rotas
 app.include_router(usuario_route)
 app.include_router(adminNaf_route)
 app.include_router(agenda_route)
-
-# Adiciona os handlers de erro ao FastAPI
-app.add_exception_handler(HTTPException, http_exception_handler)
-app.add_exception_handler(RequestValidationError, validation_exception_handler)

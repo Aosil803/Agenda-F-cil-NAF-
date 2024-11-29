@@ -1,24 +1,24 @@
 import logging
 from fastapi import HTTPException, Request
-from fastapi.exceptions import RequestValidationError
+from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
-from datetime import datetime
+from fastapi.exceptions import RequestValidationError
 
 # Configuração do logging
 logger = logging.getLogger(__name__)
 
-# Função de validação de hora
-def validar_hora(hora: str) -> str:
-    try:
-        # Valida e converte a hora para time usando datetime
-        hora_valida = datetime.strptime(hora, '%H:%M').time()
-        return hora_valida.strftime('%H:%M')  # Retorna a hora como string formatada
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Formato de hora inválido. Use HH:MM.")
-
 # Função para tratar erro de horário não disponível
 def horario_nao_disponivel():
     raise HTTPException(status_code=404, detail="Horário não disponível ou já reservado.")
+
+# Novo handler para erro de banco de dados
+def handle_database_error(db: Session, exception: Exception):
+    db.rollback()  # Faz o rollback da transação em caso de erro
+    logger.error(f"Erro ao processar a requisição: {str(exception)}")  # Log do erro
+    raise HTTPException(
+        status_code=500,
+        detail=f"Erro ao processar a requisição: {str(exception)}"  # Detalhe do erro
+    )
 
 # Handler genérico para HTTPException (outros erros 400, 404, etc.)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -37,7 +37,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         content={"message": exc.detail}
     )
 
-# Handler para erros de validação de requisição
+# Handler para erros de validação de requisição faltando campo
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     # Extraímos os erros diretamente, sem a necessidade de um loop
     error_messages = [f"Campo '{err['loc'][-1]}' inválido ou inexistente: {err['msg']}" for err in exc.errors()]
