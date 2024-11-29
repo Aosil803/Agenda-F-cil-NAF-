@@ -8,3 +8,15 @@
     background-color: #f9f9f9;
   }
   
+  .btn-custom {
+    background-color: #87CEFA; /* Azul claro */
+    color: white; /* Texto em branco */
+    border: none;
+  }
+  
+  .btn-custom:hover {
+    background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
+    color: white;
+  }
+  
+  
