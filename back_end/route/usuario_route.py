@@ -80,6 +80,32 @@ def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depe
  
     return usuario_existente  
 
+# Função para atualizar um usuário por id com incremento do handler falta testar
+# @router.put("/usuarios/{usuario_id}", response_model=UsuarioResposta)
+# def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depends(get_db)):
+#     try:
+#         # Busca o usuário pelo ID no banco de dados
+#         usuario_existente = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
+#         if not usuario_existente:
+#             raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+#         for field, value in usuario.dict(exclude_unset=True).items():
+#             setattr(usuario_existente, field, value)
+
+#         db.add(usuario_existente)  
+#         db.commit()                
+#         db.refresh(usuario_existente) 
+
+#         return usuario_existente
+
+#     except HTTPException as e:
+#         raise e  # O handler genérico irá tratar isso
+
+#     except Exception as e:
+#         db.rollback()
+#         logger.error(f"Erro inesperado ao atualizar usuário: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao atualizar usuário!")
 
 # Função para deletar um usuário por id 
 @router.delete("/usuarios/{usuario_id}", status_code=200)

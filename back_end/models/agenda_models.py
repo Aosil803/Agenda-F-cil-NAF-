@@ -9,9 +9,9 @@ class Agenda(Base):
     ano = Column(Integer, nullable=False)
     mes = Column(String, nullable=False)
     dia = Column(Integer, nullable=False)
-    hora = Column(String, nullable=False)
     turno = Column(String, nullable=False)
-    status = Column(Boolean, nullable=False, default=False) 
+    hora = Column(String, nullable=False)
+    status = Column(Boolean, nullable=False, default=True) 
     data_criacao = Column(Date, default=datetime.utcnow)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True) 
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, logger
 from sqlalchemy.orm import Session
 from back_end.models.adminNaf_models import AdminNaf
 from back_end.create_db import get_db
@@ -70,6 +70,34 @@ def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = 
     db.refresh(adminNaf_existente)
 
     return adminNaf_existente  # Retorna o usuário atualizado
+
+# Função para atualizar um Administrador por id com incremento de handler falta testar
+# @router.put("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
+# def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
+#     try:
+#         # Busca o administrador pelo ID no banco de dados
+#         adminNaf_existente = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
+
+#         if not adminNaf_existente:
+#             raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+#         # Atualiza os campos do administrador
+#         for field, value in adminNaf.dict(exclude_unset=True).items():
+#             setattr(adminNaf_existente, field, value)
+
+#         db.add(adminNaf_existente)
+#         db.commit()
+#         db.refresh(adminNaf_existente)
+
+#         return adminNaf_existente  # Retorna o administrador atualizado
+
+#     except HTTPException as e:
+#         raise e  # O handler genérico irá tratar isso
+
+#     except Exception as e:
+#         db.rollback()
+#         logger.error(f"Erro inesperado ao atualizar administrador: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao atualizar administrador!")
 
 # Função para deletar um Administrador por id 
 @router.delete("/adminNaf/{adminNaf_id}", status_code=200)
