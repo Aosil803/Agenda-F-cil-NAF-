@@ -18,5 +18,22 @@
     background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
     color: white;
   }
-  
+   /* custom-styles.css */
+
+.btn-custom, .btn-register {
+  background-color: #87CEFA; /* Azul claro */
+  color: white;
+  border: none;
+  text-align: center;
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn-custom:hover, .btn-register:hover {
+  background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
+}
+
   
