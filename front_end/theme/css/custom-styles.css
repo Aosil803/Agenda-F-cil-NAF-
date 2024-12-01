@@ -21,6 +21,7 @@ body {
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
+  font-size: 16px !important; /* Ajuste o valor conforme necessário e use !important para forçar a aplicação */
 }
 
 /* Estilo para os botões */
