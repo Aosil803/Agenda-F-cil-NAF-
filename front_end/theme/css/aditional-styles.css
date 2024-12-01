@@ -1,0 +1,71 @@
+/* css/additional-styles.css */
+.login-container {
+    max-width: 500px;
+    margin: 80px auto; /* Ajustar a margem para evitar sobreposição com o cabeçalho */
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center; /* Centralizar o texto */
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label {
+    margin-top: 10px;
+}
+
+.login-container input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.login-container button {
+    background-color: #87CEFA; /* Azul claro */
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
+}
+
+.login-container a {
+    display: block;
+    margin-top: 10px;
+    color: #00BFFF; /* Cor do link */
+    text-decoration: none;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+.login-container p {
+    margin-top: 20px;
+}
+/* css/additional-styles.css */
+.caixa-verde {
+    background-color: #28a745; /* Verde */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center; /* Centralizar o botão dentro da caixa */
+  }
+  
+  .caixa-verde .btn {
+    margin: 10px 0; /* Espaçamento superior e inferior para o botão */
+  }
+  

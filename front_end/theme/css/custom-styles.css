@@ -1,0 +1,60 @@
+/* custom-styles.css */
+
+/* Estilo para o navbar fixo */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Adiciona espaçamento ao corpo para compensar o navbar fixo */
+body {
+  padding-top: 70px; /* Ajuste este valor conforme a altura do seu navbar */
+}
+
+/* Estilo para o formulário de login */
+.login-form {
+  max-width: 500px;
+  margin: 100px auto 0; /* Adiciona espaçamento superior para evitar sobreposição com o cabeçalho */
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 16px !important; /* Ajuste o valor conforme necessário e use !important para forçar a aplicação */
+}
+
+/* Estilo para os botões */
+.btn-custom, .btn-register {
+  background-color: #87CEFA; /* Azul claro */
+  color: white;
+  border: none;
+  text-align: center;
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+/* Estilo para os botões ao passar o mouse */
+.btn-custom:hover, .btn-register:hover {
+  background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
+}
+
+
+.btn-custom, .btn-register {
+  background-color: #87CEFA; /* Azul claro */
+  color: white;
+  border: none;
+  text-align: center;
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn-custom:hover, .btn-register:hover {
+  background-color: #00BFFF; /* Azul claro mais escuro quando passar o mouse */
+}
