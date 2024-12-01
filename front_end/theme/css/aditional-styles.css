@@ -57,3 +57,15 @@
 .login-container p {
     margin-top: 20px;
 }
+/* css/additional-styles.css */
+.caixa-verde {
+    background-color: #28a745; /* Verde */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center; /* Centralizar o botão dentro da caixa */
+  }
+  
+  .caixa-verde .btn {
+    margin: 10px 0; /* Espaçamento superior e inferior para o botão */
+  }
+  
