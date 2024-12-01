@@ -20,7 +20,7 @@ def handle_database_error(db: Session, exception: Exception):
     finally:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erro {status.HTTP_500_INTERNAL_SERVER_ERROR} ao processar a requisição! {str(exception)}"
+            detail="Erro ao processar a requisição! " + str(exception)
         )
 
 # Handler genérico para HTTPException (qualquer erro 400, 404, etc.)
@@ -29,30 +29,52 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     
     return JSONResponse(
         status_code=exc.status_code,
-        content={"message": f"{exc.detail}"}
+        content={"message": f"Erro {exc.status_code} ao processar a requisição! {exc.detail}"}
     )
 
 # Handler para capturar erros de validação
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    # Captura mensagens diretamente do erro
-    error_messages = [
-        f"Campo '{err['loc'][-1]}' {err['msg']}."
-        for err in exc.errors()
-    ]
+    # Captura campos ausentes ou inválidos e formata a mensagem de erro
+    error_messages = []
+    meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    for err in exc.errors():
+        loc = err['loc'][-1]
+        if loc == 'mes':
+            error_messages.append(f"Campo '{loc}' inválido ou ausente. Formatos válidos: {meses_validos}.")
+        elif loc == 'dia':
+            ano = None
+            mes = None
+            for context in exc.errors():
+                if context['loc'][-1] == 'ano':
+                    ano = context['msg']
+                if context['loc'][-1] == 'mes':
+                    mes = context['msg']
+            if ano and mes:
+                mes_num = meses_validos.index(mes) + 1
+                max_dias = monthrange(int(ano), mes_num)[1]
+                error_messages.append(f"Campo '{loc}' inválido ou ausente. Para o mês de {mes}, o dia deve ser entre 1 e {max_dias}.")
+            else:
+                error_messages.append(f"Campo '{loc}' inválido ou ausente.")
+        else:
+            error_messages.append(f"Campo '{loc}' inválido ou ausente.")
+    
+    # Cria uma mensagem consolidada dos erros
+    mensagem_formatada = " | ".join(error_messages)  # Une as mensagens com separador
 
-    mensagem_formatada = " ".join(error_messages)  # Concatena mensagens
+    # Log detalhado do erro
+    logger.error(f"Erro de validação detectado: {mensagem_formatada}")
 
-    logger.error(f"Erro de validação: {mensagem_formatada}")
-
+    # Retorna a mensagem padronizada
     return JSONResponse(
-        status_code=422,
+        status_code=422,  # Mantém o código de erro correto
         content={
-            "message": f"Erro 422 ao processar a requisição! {mensagem_formatada}"
+            "message": f"Erro 422 ao processar a requisição! {mensagem_formatada}"  # Mensagem padronizada
         }
     )
 
 # Handler específico para erros de validação de dados personalizados
 async def validation_exception_handler_data(request: Request, exc: ValidationError):
+    # Aqui, podemos personalizar a resposta de erro para o formato que você deseja
     errors = []
     
     for error in exc.errors():
@@ -60,31 +82,20 @@ async def validation_exception_handler_data(request: Request, exc: ValidationErr
         if loc:
             field = loc[0]
             message = error.get("msg")
-            
-            # Se a mensagem de erro contiver 'value_error', remova ou trate esse erro
-            if 'value_error' in message.lower():
-                # Exemplo: Se for erro de valor do 'dia', remova ou personaliza
-                if field == 'dia':
-                    message = "O dia não é válido para o mês e ano fornecidos. Dias válidos de 1 a 29."
-            
-            # Personalização da mensagem de erro para 'dia'
-            if field == 'dia':
+            # Caso seja um erro de 'mes', customize a mensagem de erro
+            if field == 'mes':
                 errors.append({
-                    "message": f"Erro 422 ao processar a requisição! Campo '{field}' inválido. {message}"
+                    "message": f"Erro 422 ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']."
                 })
-            elif field == 'mes':
+            elif field == 'dia':
+                # Verifique se o erro é sobre o dia e a data fornecida
                 errors.append({
-                    "message": f"Erro 422 ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']." 
+                    "message": f"Erro 422 ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: [01 a 28] ou [01 a 30] ou [01 a 31] (vai depender do mês que for colocado)."
                 })
             else:
                 errors.append({
                     "message": f"Erro 422 ao processar a requisição! Campo '{field}' inválido. {message}."
                 })
-    
-    return JSONResponse(
-        status_code=422,
-        content={"detail": errors},
-    )
     
     # Aqui estamos retornando uma resposta personalizada
     return JSONResponse(

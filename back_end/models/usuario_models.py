@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.orm import relationship
 from back_end.create_db import Base
 
-# Modelo Usuario
 class Usuario(Base):
     __tablename__ = "usuarios"
 
@@ -21,4 +21,6 @@ class Usuario(Base):
     estado = Column(String, nullable=False)
     telefone = Column(String, nullable=True)
     data_criacao = Column(Date, default=datetime.utcnow)
-
+    
+    # Relacionamento com Agenda
+    agendas = relationship("Agenda", back_populates="usuario")
