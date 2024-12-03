@@ -1,43 +1,43 @@
-from fastapi import APIRouter, HTTPException, Depends, logger
+from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from back_end.models.adminNaf_models import AdminNaf
 from back_end.create_db import get_db
 from back_end.dtos.adminNaf_dtos import AdminNafCriar, AdminNafResposta
+from back_end.utils.error_handlers import handle_create_user_error
 
 router = APIRouter()
 
 # Função para retornar todos os administradores Naf
 @router.get("/adminNaf/", response_model=list[AdminNafResposta])
 async def get_adminNaf(db: Session = Depends(get_db)):
-   adminNaf = db.query(AdminNaf).all()
-   if not adminNaf:
+    adminNaf = db.query(AdminNaf).all()
+    if not adminNaf:
         raise HTTPException(status_code=404, detail="Nenhum Administrador NAF encontrado.")
-   return adminNaf
+    return adminNaf
 
 @router.get("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
 async def get_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
-    # Busca o usuário no banco de dados
     adminNaf = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
     if not adminNaf:
-        raise HTTPException(status_code=404, detail=f"Usuário Id {adminNaf_id}")
+        raise HTTPException(status_code=404, detail=f"Administrador NAF com ID {adminNaf_id} não encontrado.")
     return adminNaf
-    
+
 # Função para criar um novo administrador NAF
 @router.post("/adminNaf/", response_model=AdminNafResposta)
-async def criar_admiNaf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
+async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
     try:
         # Verificar se a matrícula já existe
         matricula_existente = db.query(AdminNaf).filter(AdminNaf.matricula == adminNaf.matricula).first()
         if matricula_existente:
-             raise HTTPException(status_code=400, detail="Matricula já cadastrado em outro usuario")
-
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Matrícula '{adminNaf.matricula}' já cadastrada em outro administrador.")
+        
         # Criar novo administrador
         novo_admin = AdminNaf(
             nome=adminNaf.nome,
             matricula=adminNaf.matricula,
             email=adminNaf.email,
             senha=adminNaf.senha,
-            perfil=adminNaf.perfil,
+            perfil_admin=adminNaf.perfil_admin
         )
 
         # Adiciona administrador no banco de dados
@@ -45,23 +45,23 @@ async def criar_admiNaf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(novo_admin)  # Atualiza o objeto com os dados salvos
 
-       # Retorna a resposta com o DTO de saída (AdminNafResposta)
-        return novo_admin 
+        return novo_admin
+
+    except HTTPException as e:
+        raise e  # Relevanta a exceção HTTPException específica
     except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao criar Administrador!")
+        handle_create_user_error(db, e)
 
-
-# Função para atualizar um Administrador por id  
+        
+# Função para atualizar um Administrador por id
 @router.put("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
 def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
-    # Busca o usuário pelo ID
     adminNaf_existente = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
 
     if not adminNaf_existente:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        raise HTTPException(status_code=404, detail=f"Administrador NAF com ID {adminNaf_id} não encontrado.")
 
-    # Atualiza os campos do usuário
+    # Atualiza os campos do administrador
     for field, value in adminNaf.dict(exclude_unset=True).items():
         setattr(adminNaf_existente, field, value)
 
@@ -69,48 +69,17 @@ def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = 
     db.commit()
     db.refresh(adminNaf_existente)
 
-    return adminNaf_existente  # Retorna o usuário atualizado
+    return adminNaf_existente
 
-# Função para atualizar um Administrador por id com incremento de handler falta testar
-# @router.put("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
-# def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
-#     try:
-#         # Busca o administrador pelo ID no banco de dados
-#         adminNaf_existente = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
-
-#         if not adminNaf_existente:
-#             raise HTTPException(status_code=404, detail="Usuário não encontrado")
-
-#         # Atualiza os campos do administrador
-#         for field, value in adminNaf.dict(exclude_unset=True).items():
-#             setattr(adminNaf_existente, field, value)
-
-#         db.add(adminNaf_existente)
-#         db.commit()
-#         db.refresh(adminNaf_existente)
-
-#         return adminNaf_existente  # Retorna o administrador atualizado
-
-#     except HTTPException as e:
-#         raise e  # O handler genérico irá tratar isso
-
-#     except Exception as e:
-#         db.rollback()
-#         logger.error(f"Erro inesperado ao atualizar administrador: {str(e)}")
-#         raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao atualizar administrador!")
-
-# Função para deletar um Administrador por id 
+# Função para deletar um Administrador por id
 @router.delete("/adminNaf/{adminNaf_id}", status_code=200)
 async def deletar_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
     adminNaf = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
-    
-    if not adminNaf:
-        # Lançando a exceção que será tratada no error_handlers.py
-        raise HTTPException(status_code=404, detail=f"Usuário com ID {adminNaf_id} não encontrado")
 
-    # Remove o usuário
+    if not adminNaf:
+        raise HTTPException(status_code=404, detail=f"Administrador NAF com ID {adminNaf_id} não encontrado.")
+
     db.delete(adminNaf)
     db.commit()
-    
-    # Retorna apenas uma mensagem de sucesso
-    return {"message": f"Usuário com ID {adminNaf_id} deletado com sucesso!"}
+
+    return {"message": f"Administrador NAF com ID {adminNaf_id} deletado com sucesso!"}

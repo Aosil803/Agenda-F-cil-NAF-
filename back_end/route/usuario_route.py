@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from back_end.models.usuario_models import Usuario
 from back_end.dtos.usuario_dtos import UsuarioCriar, UsuarioResposta
 from back_end.create_db import get_db
-
+from back_end.utils.error_handlers import handle_create_user_error
+ 
 
 router = APIRouter()
 
@@ -14,7 +15,6 @@ async def get_usuarios(db: Session = Depends(get_db)):
     if not usuarios:
         raise HTTPException(status_code=404, detail="Nenhum usuário encontrado.")
     return usuarios
-
 
 # Função para retornar um usuário específico por ID
 @router.get("/usuarios/{usuario_id}", response_model=UsuarioResposta)
@@ -32,12 +32,12 @@ async def criar_usuario(usuario: UsuarioCriar, db: Session = Depends(get_db)):
         # Verifica se o CPF já está cadastrado
         cpf_existente = db.query(Usuario).filter(Usuario.cpf == usuario.cpf).first()
         if cpf_existente:
-            raise HTTPException(status_code=400, detail="CPF já cadastrado em outro usuario")
+           raise HTTPException(status_code=500, detail=f"CPF N° '{usuario.cpf}' já cadastrado em outro usuário.")
                 
         # Cria o novo usuário usando o DTO de entrada
         novo_usuario = Usuario(
             nome=usuario.nome,
-            perfil=usuario.perfil,
+            perfil_usuario=usuario.perfil_usuario,
             email=usuario.email, 
             cpf=usuario.cpf,
             telefone=usuario.telefone,
@@ -58,10 +58,10 @@ async def criar_usuario(usuario: UsuarioCriar, db: Session = Depends(get_db)):
 
         # Retorna a resposta com o DTO de saída (UsuarioResposta)
         return novo_usuario  
+    except HTTPException as e:
+        raise e  # Relevanta a exceção HTTPException específica
     except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao criar usuário!")
-
+        handle_create_user_error(db, e)  # Usa o novo handler
 
 # Função para atualizar um usuário por id  
 @router.put("/usuarios/{usuario_id}", response_model=UsuarioResposta)
@@ -78,41 +78,14 @@ def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depe
     db.commit()                
     db.refresh(usuario_existente) 
  
-    return usuario_existente  
+    return usuario_existente
 
-# Função para atualizar um usuário por id com incremento do handler falta testar
-# @router.put("/usuarios/{usuario_id}", response_model=UsuarioResposta)
-# def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depends(get_db)):
-#     try:
-#         # Busca o usuário pelo ID no banco de dados
-#         usuario_existente = db.query(Usuario).filter(Usuario.id == usuario_id).first()
-
-#         if not usuario_existente:
-#             raise HTTPException(status_code=404, detail="Usuário não encontrado")
-
-#         for field, value in usuario.dict(exclude_unset=True).items():
-#             setattr(usuario_existente, field, value)
-
-#         db.add(usuario_existente)  
-#         db.commit()                
-#         db.refresh(usuario_existente) 
-
-#         return usuario_existente
-
-#     except HTTPException as e:
-#         raise e  # O handler genérico irá tratar isso
-
-#     except Exception as e:
-#         db.rollback()
-#         logger.error(f"Erro inesperado ao atualizar usuário: {str(e)}")
-#         raise HTTPException(status_code=500, detail=f"Erro {str(e)} ao atualizar usuário!")
-
-# Função para deletar um usuário por id 
+# Função para atualizar um usuário por id   
 @router.delete("/usuarios/{usuario_id}", status_code=200)
 async def deletar_usuario(usuario_id: int, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
     
-    if not usuario:
+    if not UsuarioResposta:
         # Lançando a exceção que será tratada no error_handlers.py
         raise HTTPException(status_code=404, detail=f"Usuário com ID {usuario_id} não encontrado")
 
@@ -121,4 +94,4 @@ async def deletar_usuario(usuario_id: int, db: Session = Depends(get_db)):
     db.commit()
     
     # Retorna apenas uma mensagem de sucesso
-    return {"message": f"Usuário com ID {usuario_id} deletado com sucesso!"}
+    return {"message": f"Usuário com ID {usuario_id} deletado com sucesso!"}  

@@ -1,18 +1,20 @@
 from calendar import monthrange
 from pydantic import BaseModel, validator
-from typing import Literal, Optional
+from typing import Optional
 from datetime import date, datetime
 
-class Agendamento(BaseModel):
+# Classe base sem validações
+class AgendaBase(BaseModel):
     id: Optional[int] = None
     ano: int
-    mes: Literal["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    mes: str
     dia: int
     turno: str
     hora: str
     status: Optional[bool] = None
+    usuario_id: Optional[int] = None
 
-    # Função para converter a string de data em um objeto datetime
+    # Adicionando a função converte_str_datetime
     def converte_str_datetime(self):
         meses = {
             'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6,
@@ -27,6 +29,8 @@ class Agendamento(BaseModel):
         except ValueError as e:
             raise ValueError(str(e))  # Retorna o erro como string sem mensagem adicional
 
+# Classe de criação com validações
+class AgendaCriar(AgendaBase):
     @validator('mes')
     def validar_mes(cls, mes):
         meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
@@ -51,31 +55,53 @@ class Agendamento(BaseModel):
         max_dias = monthrange(ano, mes_num)[1]
 
         if dia < 1 or dia > max_dias:
-            raise ValueError(f"inválido ou ausente. Para o mês de {mes}, o dia deve ser entre 1 e {max_dias}.")
+            raise ValueError(f"Para o mês de {mes}, o dia deve ser entre 1 a {max_dias}")
 
         return dia
 
-class UsuarioAgendamento(Agendamento):
-    usuario_id: Optional[int] = None
+    @validator('turno')
+    def validar_turno(cls, turno):
+        if turno not in ["manhã", "tarde"]:
+            raise ValueError("Turno inválido. Deve ser 'manhã' ou 'tarde'.")
+        return turno
 
-class AgendamentoResposta(Agendamento):
+    @validator('hora')
+    def validar_hora(cls, hora, values):
+        turno = values.get("turno")
+
+        if turno == "manhã":
+            # Verifica se a hora está no intervalo da manhã
+            if not (hora >= "9:00" and hora < "12:00"):
+                raise ValueError(f"Para o turno 'manhã', a hora deve estar entre 9:00 e 11:59.")
+        elif turno == "tarde":
+            # Verifica se a hora está no intervalo da tarde
+            if not (hora >= "12:00" and hora <= "18:00"):
+                raise ValueError(f"Para o turno 'tarde', a hora deve estar entre 12:00 e 18:00.")
+
+        return hora
+
+# Classe de resposta sem validações
+class AgendaResposta(AgendaBase):
     usuario_id: Optional[int] = None
-    data_criacao: str  # Vai ser retornada como string
+    data_criacao: str
     
     @validator('data_criacao', pre=True)
     def format_data_criacao(cls, v):
-        # Certifique-se de que a data seja formatada corretamente para o formato DD/MM/YYYY
-        if isinstance(v, date):
+        if isinstance(v, (datetime, date)):
             return v.strftime('%d/%m/%Y')
         return v
 
-class AgendaOcupadaResposta(Agendamento):
+    class Config:
+        from_attributes = True
+
+# Classe para respostas de agendas ocupadas
+class AgendaOcupadaResposta(AgendaBase):
     data_criacao: str
     
     @validator('data_criacao', pre=True)
     def format_data_criacao(cls, v):
         # Certifique-se de que a data seja formatada corretamente para o formato DD/MM/YYYY
-        if isinstance(v, date):
+        if isinstance(v, datetime):
             return v.strftime('%d/%m/%Y')
         return v
 
