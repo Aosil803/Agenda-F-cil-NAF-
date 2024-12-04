@@ -1,36 +1,28 @@
 from calendar import monthrange
 from pydantic import BaseModel, validator
 from typing import Optional
-from datetime import date, datetime
+from datetime import datetime, date
 
-# Classe base sem validações
-class AgendaBase(BaseModel):
+# DTO para criação de horários
+class AgendaCriar(BaseModel):
     id: Optional[int] = None
+    matricula: str
     ano: int
     mes: str
     dia: int
     turno: str
     hora: str
-    status: Optional[bool] = None
-    usuario_id: Optional[int] = None
 
-    # Adicionando a função converte_str_datetime
-    def converte_str_datetime(self):
-        meses = {
-            'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6,
-            'jul': 7, 'ago': 8, 'set': 9, 'out': 10, 'nov': 11, 'dez': 12
-        }
-        try:
-            mes_num = meses[self.mes.lower()]  # Converte o mês para número
-            data = datetime(int(self.ano), mes_num, self.dia)  # Converte a data
-            return data
-        except KeyError:
-            raise ValueError(self.mes.lower())  # Apenas retorna o nome do mês em minúsculo
-        except ValueError as e:
-            raise ValueError(str(e))  # Retorna o erro como string sem mensagem adicional
+class AgendamentoCriar(BaseModel):
+    id: Optional[int] = None
+    cpf: Optional[str] = None
+    ano: int
+    mes: str
+    dia: int
+    turno: str
+    hora: str
 
-# Classe de criação com validações
-class AgendaCriar(AgendaBase):
+    # Validação do mês
     @validator('mes')
     def validar_mes(cls, mes):
         meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
@@ -39,6 +31,7 @@ class AgendaCriar(AgendaBase):
             raise ValueError(f"inválido ou ausente, formatos válidos [{formatos_validos}]")
         return mes
 
+    # Validação do dia
     @validator('dia')
     def validar_dia(cls, dia, values):
         ano = values.get("ano")
@@ -47,11 +40,8 @@ class AgendaCriar(AgendaBase):
         if not ano or not mes:
             return dia
 
-        # Mapeamento do mês para número
         meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
         mes_num = meses_validos.index(mes) + 1
-
-        # Verifica o número de dias válidos para o mês e ano
         max_dias = monthrange(ano, mes_num)[1]
 
         if dia < 1 or dia > max_dias:
@@ -59,34 +49,44 @@ class AgendaCriar(AgendaBase):
 
         return dia
 
+    # Validação do turno
     @validator('turno')
     def validar_turno(cls, turno):
         if turno not in ["manhã", "tarde"]:
             raise ValueError("Turno inválido. Deve ser 'manhã' ou 'tarde'.")
         return turno
 
+    # Validação da hora
     @validator('hora')
     def validar_hora(cls, hora, values):
         turno = values.get("turno")
+        hora_obj = datetime.strptime(hora, "%H:%M").time()
 
         if turno == "manhã":
-            # Verifica se a hora está no intervalo da manhã
-            if not (hora >= "9:00" and hora < "12:00"):
+            hora_inicio = datetime.strptime("09:00", "%H:%M").time()
+            hora_fim = datetime.strptime("11:59", "%H:%M").time()
+            if not (hora_inicio <= hora_obj <= hora_fim):
                 raise ValueError(f"Para o turno 'manhã', a hora deve estar entre 9:00 e 11:59.")
         elif turno == "tarde":
-            # Verifica se a hora está no intervalo da tarde
-            if not (hora >= "12:00" and hora <= "18:00"):
+            hora_inicio = datetime.strptime("12:00", "%H:%M").time()
+            hora_fim = datetime.strptime("18:00", "%H:%M").time()
+            if not (hora_inicio <= hora_obj <= hora_fim):
                 raise ValueError(f"Para o turno 'tarde', a hora deve estar entre 12:00 e 18:00.")
 
         return hora
 
-# Classe de resposta sem validações
-class AgendaResposta(AgendaBase):
-    usuario_id: Optional[int] = None
+# DTO para resposta de criação de horários
+class AgendaResposta(BaseModel):
+    id: int
+    ano: int
+    mes: str
+    dia: int
+    turno: str
+    hora: str
     data_criacao: str
-    
+
     @validator('data_criacao', pre=True)
-    def format_data_criacao(cls, v):
+    def formatar_data_criacao(cls, v):
         if isinstance(v, (datetime, date)):
             return v.strftime('%d/%m/%Y')
         return v
@@ -94,16 +94,49 @@ class AgendaResposta(AgendaBase):
     class Config:
         from_attributes = True
 
-# Classe para respostas de agendas ocupadas
-class AgendaOcupadaResposta(AgendaBase):
+# DTO para agendamento de horário (POST específico)
+# # class Agendamento(BaseModel):    
+# #     cpf: str
+# #     ano: int
+# #     mes: str
+# #     dia: int
+# #     turno: str
+# #     hora: str
+
+# #     # Validação do mês
+# #     @validator('mes')
+# #     def validar_mes(cls, mes):
+# #         meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+# #         if mes not in meses_validos:
+# #             formatos_validos = ", ".join([f'"{m}"' for m in meses_validos])
+# #             raise ValueError(f"inválido ou ausente, formatos válidos [{formatos_validos}]")
+# #         return mes
+
+#     # Validação da hora
+#     @validator('hora')
+#     def validar_hora(cls, hora):
+#         try:
+#             datetime.strptime(hora, "%H:%M")
+#         except ValueError:
+#             raise ValueError("Formato de hora inválido. Deve ser HH:MM.")
+#         return hora
+
+# DTO para resposta do agendamento
+class AgendamentoResposta(BaseModel):
+    id: int
+    ano: int
+    mes: str
+    dia: int
+    turno: str
+    hora: str
     data_criacao: str
-    
-    @validator('data_criacao', pre=True)
-    def format_data_criacao(cls, v):
-        # Certifique-se de que a data seja formatada corretamente para o formato DD/MM/YYYY
-        if isinstance(v, datetime):
+    data_agendamento: str
+
+    @validator('data_criacao', 'data_agendamento', pre=True)
+    def formatar_datas(cls, v):
+        if isinstance(v, (datetime, date)):
             return v.strftime('%d/%m/%Y')
         return v
 
     class Config:
-        from_attributes = True  # Atualização para Pydantic V2
+        from_attributes = True

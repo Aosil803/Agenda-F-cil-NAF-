@@ -12,13 +12,10 @@ class Agenda(Base):
     dia = Column(Integer, nullable=False)
     turno = Column(String, nullable=False)
     hora = Column(String, nullable=False)
-    status = Column(Boolean, nullable=False, default=True) 
+    status = Column(Boolean, nullable=False, default=True)
     data_criacao = Column(Date, default=datetime.utcnow)
-    usuario_id = Column(Integer, ForeignKey("usuario.id"), nullable=False)
+    data_agendamento = Column(Date, nullable=True)  # Novo campo para a data do agendamento
+    usuario_id = Column(Integer, ForeignKey("usuario.id"), nullable=True)  
     adminNaf_id = Column(Integer, ForeignKey("adminNaf.id"), nullable=True)
-
-    # Relacionamento com Usuario (1:1)
     usuario = relationship("Usuario", back_populates="agenda")
-
-    # Relacionamento com Administrador (1:N)
     administrador = relationship("AdminNaf", back_populates="agendas")

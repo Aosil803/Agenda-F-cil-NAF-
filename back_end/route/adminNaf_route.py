@@ -55,21 +55,34 @@ async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)
         
 # Função para atualizar um Administrador por id
 @router.put("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
-def atualizar_adminNaf(adminNaf_id: int, adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
-    adminNaf_existente = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
+def atualizar_adminNaf(adminNaf_id: int, adminNaf_data: AdminNafCriar, db: Session = Depends(get_db)):
+    # Busca o AdminNaf no banco de dados
+    adminNaf = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
 
-    if not adminNaf_existente:
-        raise HTTPException(status_code=404, detail=f"Administrador NAF com ID {adminNaf_id} não encontrado.")
+    if not adminNaf:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Erro ao processar a requisição! AdminNaf não encontrado"
+        )
 
-    # Atualiza os campos do administrador
-    for field, value in adminNaf.dict(exclude_unset=True).items():
-        setattr(adminNaf_existente, field, value)
+    # Verifica se a matrícula foi alterada
+    if adminNaf.matricula != adminNaf_data.matricula:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Erro ao processar a requisição! O campo matrícula não pode ser alterada"
+        )
 
-    db.add(adminNaf_existente)
+    # Atualiza os campos do AdminNaf, exceto a matrícula
+    for field, value in adminNaf_data.dict(exclude_unset=True).items():
+        if field != "matricula":
+            setattr(adminNaf, field, value)
+
     db.commit()
-    db.refresh(adminNaf_existente)
+    db.refresh(adminNaf)
 
-    return adminNaf_existente
+    # Converte o AdminNaf para o modelo de resposta
+    return AdminNafResposta.from_orm(adminNaf)
+
 
 # Função para deletar um Administrador por id
 @router.delete("/adminNaf/{adminNaf_id}", status_code=200)
