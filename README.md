@@ -1,8 +1,6 @@
 Projeto MVP - Agenda Fácil Naf
 
-Desenvolvedores : Alexandre de Oliveira Silveira // 06007233
-                  Tatiana Claussen Correa Beigelman // 06006978
-                  Giovana de Araujo Machado // 06007320
+Desenvolvedores : Alexandre de Oliveira Silveira 06007233 // Tatiana Claussen Correa Beigelman 06006978 // Giovana de Araujo Machado 06007320
                   
 
 Descrição do projeto
@@ -29,7 +27,7 @@ Tecnologias Ultilizadas
 -> JavaScript: Utilizado para adicionar interatividade às páginas web.
 
 * BACK-END *
-
+-> Python: Ultilizado para realizar substituições ou extrações automáticas de informações.
 -> FastAPI: Framework utilizado para desenvolver a API RESTful de maneira rápida e eficiente.
 -> SQLAlchemy: Biblioteca ORM utilizada para fazer a conexão e manipulação do banco de dados.
 -> SQLite: Banco de dados utilizado para armazenar as informações da aplicação.
