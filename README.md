@@ -23,13 +23,20 @@ Tecnologias Ultilizadas
 
 * FRONT-END *
 -> HTML 5: Utilizado para estruturar as páginas web de maneira semântica e acessível.
+  
 -> CSS 3: Utilizado para estilizar e melhorar a aparência das páginas web.
+
 -> JavaScript: Utilizado para adicionar interatividade às páginas web.
 
 * BACK-END *
 -> Python: Ultilizado para realizar substituições ou extrações automáticas de informações.
+  
 -> FastAPI: Framework utilizado para desenvolver a API RESTful de maneira rápida e eficiente.
+
 -> SQLAlchemy: Biblioteca ORM utilizada para fazer a conexão e manipulação do banco de dados.
+
 -> SQLite: Banco de dados utilizado para armazenar as informações da aplicação.
+
 -> JWT (JSON Web Tokens): Utilizado para autenticação e autorização dos usuários.
+
 -> Pydantic: Utilizado para validação de dados e criação de modelos.
