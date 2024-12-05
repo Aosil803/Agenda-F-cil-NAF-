@@ -13,7 +13,7 @@ router = APIRouter()
 async def get_usuarios(db: Session = Depends(get_db)):
     usuarios = db.query(Usuario).all()
     if not usuarios:
-        raise HTTPException(status_code=404, detail="Nenhum usuário encontrado.")
+        raise HTTPException(status_code=404, detail="Erro ao processar a requisição! Nenhum usuário encontrado.")
     return usuarios
 
 # Função para retornar um usuário específico por ID

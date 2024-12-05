@@ -6,6 +6,8 @@ class AdminNafCriar(BaseModel):
     id: Optional[int] = None
     nome: str
     matricula: str
+    polo: str
+    telefone: str
     email: str
     senha: str
     perfil_admin: str
@@ -27,7 +29,6 @@ class AdminNafResposta(AdminNafCriar):
 
     @validator('data_criacao', pre=True)
     def format_data_criacao(cls, v):
-        # Certifica-se que a data seja formatada corretamente para o formato DD/MM/YYYY
         if isinstance(v, date):
             return v.strftime('%d/%m/%Y')
         return v  # Se já for string, retorna como está

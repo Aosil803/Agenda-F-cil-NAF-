@@ -86,8 +86,8 @@ class AgendaResposta(BaseModel):
     data_criacao: str
 
     @validator('data_criacao', pre=True)
-    def formatar_data_criacao(cls, v):
-        if isinstance(v, (datetime, date)):
+    def format_data_criacao(cls, v):
+        if isinstance(v, date):
             return v.strftime('%d/%m/%Y')
         return v
 
@@ -132,9 +132,9 @@ class AgendamentoResposta(BaseModel):
     data_criacao: str
     data_agendamento: str
 
-    @validator('data_criacao', 'data_agendamento', pre=True)
-    def formatar_datas(cls, v):
-        if isinstance(v, (datetime, date)):
+    @validator('data_criacao', pre=True)
+    def format_data_criacao(cls, v):
+        if isinstance(v, date):
             return v.strftime('%d/%m/%Y')
         return v
 

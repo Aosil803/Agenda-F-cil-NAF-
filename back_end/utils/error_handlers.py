@@ -74,9 +74,9 @@ async def validation_exception_handler(request: Request, exc: Exception):
                     elif turno == "tarde" and not ("12:00" <= hora <= "18:00"):
                         errors.append(f"Erro ao processar a requisição! Hora '{hora}' inválida para o turno da tarde. Deve ser entre 12:00 e 18:00.")
                     else:
-                        errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido ou inexistente. {message}")
+                        errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido ou inexistente.")
                 else:
-                    errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido ou inexistente. {message}")
+                    errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido ou inexistente.")
 
     # Combina todas as mensagens em uma única string
     mensagem_erro = " | ".join(errors)

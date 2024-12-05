@@ -1,7 +1,8 @@
 from datetime import datetime
-from sqlalchemy import CHAR, Column, Integer, String, Date
+from sqlalchemy import CHAR, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from back_end.create_db import Base
+from back_end.models.login_models import Login
 
 class Usuario(Base):
     __tablename__ = "usuario"
@@ -21,6 +22,6 @@ class Usuario(Base):
     estado = Column(String, nullable=False)
     telefone = Column(String, nullable=True)
     data_criacao = Column(Date, default=datetime.utcnow)
-    
-    # Relacionamento com Agenda (1:1)
-    agenda = relationship("Agenda", back_populates="usuario", uselist=False)
+    login_id = Column(Integer, ForeignKey('login.id_login'))  # Atualizando referência para login.id_login
+    login = relationship("Login")  # Relacionamento com login
+    agenda = relationship("Agenda", back_populates="usuario", uselist=False)  # Relacionamento com Agenda (1:1)

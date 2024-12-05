@@ -6,6 +6,7 @@ from back_end.dtos.agenda_dtos import AgendaCriar, AgendaResposta, AgendamentoCr
 from back_end.models.adminNaf_models import AdminNaf
 from back_end.models.agenda_models import Agenda
 from back_end.models.usuario_models import Usuario
+from back_end.utils.get_usuario_id import get_usuario_id  # Ajuste o caminho conforme necessário
 from back_end.utils.error_handlers import handle_database_error
 
 router = APIRouter()
@@ -61,16 +62,14 @@ def criar_horario(agenda: AgendaCriar, db: Session = Depends(get_db)):
         db.add(novo_horario)
         db.commit()
         db.refresh(novo_horario)
-
         
         return novo_horario
     except HTTPException as e:
         raise e
-
     except Exception as e:
         handle_database_error(db, e)
 
-#Função para deletar uma data de agendamento por id 
+# Função para deletar uma data de agendamento por id 
 @router.delete("/agenda/{agenda_id}", status_code=200)
 async def deletar_agendamento(agenda_id: int, db: Session = Depends(get_db)):
     agendamento = db.query(Agenda).filter(Agenda.id == agenda_id).first()
@@ -88,9 +87,7 @@ async def deletar_agendamento(agenda_id: int, db: Session = Depends(get_db)):
 
 # Função para marcar agendamento de acordo agenda
 @router.post("/agendamento/", response_model=AgendamentoResposta)
-def criar_agendamento(agenda: AgendamentoCriar, db: Session = Depends(get_db)):
-    usuario_id: int = Depends(get_usuario_id)
-
+def criar_agendamento(agenda: AgendamentoCriar, db: Session = Depends(get_db), usuario_id: int = Depends(get_usuario_id)):
     try:
         # Verificar se o horário existe
         horario = db.query(Agenda).filter(

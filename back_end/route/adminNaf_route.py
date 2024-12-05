@@ -22,7 +22,7 @@ async def get_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Administrador NAF com ID {adminNaf_id} não encontrado.")
     return adminNaf
 
-# Função para criar um novo administrador NAF
+# Função para criar um novo cadastro de administrador NAF
 @router.post("/adminNaf/", response_model=AdminNafResposta)
 async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)):
     try:
@@ -37,23 +37,23 @@ async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)
             matricula=adminNaf.matricula,
             email=adminNaf.email,
             senha=adminNaf.senha,
-            perfil_admin=adminNaf.perfil_admin
+            perfil_admin=adminNaf.perfil_admin,
+            login_id=adminNaf.login_id  # Incluindo o campo login_id
         )
 
         # Adiciona administrador no banco de dados
         db.add(novo_admin)
         db.commit()
-        db.refresh(novo_admin)  # Atualiza o objeto com os dados salvos
+        db.refresh(novo_admin)  
 
         return novo_admin
 
     except HTTPException as e:
-        raise e  # Relevanta a exceção HTTPException específica
+        raise e 
     except Exception as e:
         handle_create_user_error(db, e)
 
-        
-# Função para atualizar um Administrador por id
+# Função para atualizar um cadastro de Administrador por id
 @router.put("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
 def atualizar_adminNaf(adminNaf_id: int, adminNaf_data: AdminNafCriar, db: Session = Depends(get_db)):
     # Busca o AdminNaf no banco de dados
@@ -83,7 +83,6 @@ def atualizar_adminNaf(adminNaf_id: int, adminNaf_data: AdminNafCriar, db: Sessi
     # Converte o AdminNaf para o modelo de resposta
     return AdminNafResposta.from_orm(adminNaf)
 
-
 # Função para deletar um Administrador por id
 @router.delete("/adminNaf/{adminNaf_id}", status_code=200)
 async def deletar_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
@@ -96,3 +95,5 @@ async def deletar_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": f"Administrador NAF com ID {adminNaf_id} deletado com sucesso!"}
+
+
