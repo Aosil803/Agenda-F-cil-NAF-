@@ -19,7 +19,7 @@ Público Alvo: Estudantes da Unifeso, Professores, Administradores, pessoas fís
 
 Link com mais informações do projeto e os requisitos abordados : https://www.canva.com/design/DAGYdEUAREY/B1ouTI7Zo4zx73jeae_MOw/edit?utm_content=DAGYdEUAREY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
-Tecnologias Ultilizadas
+Tecnologias Utilizadas
 
 * FRONT-END *
 -> HTML 5: Utilizado para estruturar as páginas web de maneira semântica e acessível.
