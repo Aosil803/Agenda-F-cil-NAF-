@@ -17,7 +17,7 @@ Com o desafio de criar um website que proporcione facilicdade e agilidade de age
 
 Público Alvo: Estudantes da Unifeso, Professores, Administradores, pessoas físicas e jurídicas.
 
-Requisitos : https://docs.google.com/spreadsheets/d/1BxwF7b0D3SYMAQiA4jfop0SHOzMpLmdv/edit?usp=sharing&ouid=113373026353997953606&rtpof=true&sd=true
+Link com mais informações do projeto e os requisitos abordados : https://www.canva.com/design/DAGYdEUAREY/B1ouTI7Zo4zx73jeae_MOw/edit?utm_content=DAGYdEUAREY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 Tecnologias Ultilizadas
 
