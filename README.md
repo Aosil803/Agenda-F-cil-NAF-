@@ -2,41 +2,62 @@ Projeto MVP - Agenda Fácil Naf
 
 Desenvolvedores : Alexandre de Oliveira Silveira 06007233 // Tatiana Claussen Correa Beigelman 06006978 // Giovana de Araujo Machado 06007320
                   
+## Sobre o Projeto
 
-Descrição do projeto
+Este projeto visa desenvolver uma aplicação para gestão de agendas do Núcleo de Apoio Fiscal (NAF) da Universidade do Feso (Unifeso). A aplicação permite que administradores e usuários comuns possam criar, editar e gerenciar suas agendas de maneira eficiente.
 
-A disciplina de MVP (Produto Viável Mínimo), é uma abordagem no desenvolvimento de produtos e startups que consiste em criar uma versão básica e funcional do produto com o mínimo de recursos necessários. O objetivo principal é lançar o produto no mercado o mais rápido possível para validar sua viabilidade e obter feedback dos usuários. O produto mínimo viável é a formatação de uma ideia em algo palpável, seja essa oferta digital ou física.
+## Tecnologias Utilizadas
 
-Situação problema escolhido
+### Front-End
 
-Situação #1 - Agenda Fácil Naf
+- *HTML 5*: Utilizado para estruturar as páginas web de maneira semântica e acessível.
+- *CSS 3*: Utilizado para estilizar e melhorar a aparência das páginas web.
+- *JavaScript*: Utilizado para adicionar interatividade às páginas web.
 
-Objetivo e Situação Problema do Projeto
+### Back-End
 
-Com o desafio de criar um website que proporcione facilicdade e agilidade de agendamento, o sistema Agenda Fácil Naf tem o intuito de ajudar as pessoas com um atendimento eficiente e de fácil entendimento para quem busca assistência fiscal, declarações de Imposto de Renda e outros serviços oferecidos pelo NAF.
+- *FastAPI*: Framework utilizado para desenvolver a API RESTful de maneira rápida e eficiente.
+- *SQLAlchemy*: Biblioteca ORM utilizada para fazer a conexão e manipulação do banco de dados.
+- *SQLite*: Banco de dados utilizado para armazenar as informações da aplicação.
+- *JWT (JSON Web Tokens)*: Utilizado para autenticação e autorização dos usuários.
+- *Pydantic*: Utilizado para validação de dados e criação de modelos.
 
-Público Alvo: Estudantes da Unifeso, Professores, Administradores, pessoas físicas e jurídicas.
+## Estrutura do Projeto
 
-Link com mais informações do projeto e os requisitos abordados : https://www.canva.com/design/DAGYdEUAREY/B1ouTI7Zo4zx73jeae_MOw/edit?utm_content=DAGYdEUAREY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+O projeto está organizado da seguinte forma:
 
-Tecnologias Utilizadas
+- **back_end**: Contém todo o código relacionado ao back-end da aplicação.
+  - **models**: Contém os modelos de dados para as tabelas do banco de dados.
+  - **route**: Contém as rotas da API.
+  - **dtos**: Contém os Data Transfer Objects (DTOs) utilizados na aplicação.
+  - **utils**: Contém utilitários e funções auxiliares.
+  - **create_db.py**: Script para criação e configuração do banco de dados.
+  - **app.py**: Arquivo principal que inicia a aplicação FastAPI.
 
-* FRONT-END *
--> HTML 5: Utilizado para estruturar as páginas web de maneira semântica e acessível.
-  
--> CSS 3: Utilizado para estilizar e melhorar a aparência das páginas web.
+## Como Executar o Projeto
 
--> JavaScript: Utilizado para adicionar interatividade às páginas web.
+### Pré-requisitos
 
-* BACK-END *
--> Python: Ultilizado para realizar substituições ou extrações automáticas de informações.
-  
--> FastAPI: Framework utilizado para desenvolver a API RESTful de maneira rápida e eficiente.
+- Python 3.7 ou superior
+- Pip (gerenciador de pacotes do Python)
+- Virtualenv (opcional, mas recomendado)
 
--> SQLAlchemy: Biblioteca ORM utilizada para fazer a conexão e manipulação do banco de dados.
+### Passo a Passo
 
--> SQLite: Banco de dados utilizado para armazenar as informações da aplicação.
+1. Clone o repositório:
+   git clone https://github.com/Aosil803/AgendaFacil_NAF_Unifeso
+   cd seu_repositorio
+   
+2. Crie um ambiente virtual e ative-o:
+   python -m venv venv
+   source venv/bin/activate  # No Windows use venv\Scripts\activate
+   
+3. Instale as dependências:
+   pip install -r requirements.txt
 
--> JWT (JSON Web Tokens): Utilizado para autenticação e autorização dos usuários.
+4. Execute a aplicação:
+   uvicorn back_end.app:app --reload
 
--> Pydantic: Utilizado para validação de dados e criação de modelos.
+5. Acesse a aplicação no navegador:
+   http://127.0.0.1:8000
+
