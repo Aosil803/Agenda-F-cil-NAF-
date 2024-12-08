@@ -8,13 +8,10 @@ class AdminNaf(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
     matricula = Column(String, unique=True, nullable=False)
-    polo = Column(String, nullable=False)
+    perfil_admin = Column(CHAR(25), nullable=False)
+    polo = Column(CHAR(20), nullable=False)
     telefone = Column(String, nullable=False)
     email = Column(String, nullable=False)
     senha = Column(String, nullable=False)
-    perfil_admin = Column(CHAR(25), nullable=False)
     data_criacao = Column(Date, default=datetime.utcnow)
-    login_id = Column(Integer, ForeignKey('login.id_login'))  # Atualizar referência para login.id_login
-    login = relationship("Login")  # Relacionamento com Credenciais
-    agendas = relationship("Agenda", back_populates="administrador")  # Relacionamento com Agenda (1:N)
-
+    agendas = relationship("Agenda", back_populates="administrador")

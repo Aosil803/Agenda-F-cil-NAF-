@@ -14,84 +14,60 @@ async def get_usuarios(db: Session = Depends(get_db)):
     usuarios = db.query(Usuario).all()
     if not usuarios:
         raise HTTPException(status_code=404, detail="Erro ao processar a requisição! Nenhum usuário encontrado.")
-    return usuarios
+    return [UsuarioResposta.from_orm(usuario) for usuario in usuarios]
 
-# Função para retornar um usuário específico por ID
+# Função para retornar o usuário por id
 @router.get("/usuarios/{usuario_id}", response_model=UsuarioResposta)
 async def get_usuario(usuario_id: int, db: Session = Depends(get_db)):
-    # Busca o usuário no banco de dados
     usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
     if not usuario:
-        raise HTTPException(status_code=404, detail=f"Usuário Id {usuario_id}")
-    return usuario
+        raise HTTPException(status_code=404, detail=f"Usuário Id {usuario_id} não encontrado.")
+    return UsuarioResposta.from_orm(usuario)
 
-# Função para criar um usuário
+# Função para criar um usuario
 @router.post("/usuarios/", response_model=UsuarioResposta)
 async def criar_usuario(usuario: UsuarioCriar, db: Session = Depends(get_db)):
     try:
-        # Verifica se o CPF já está cadastrado
         cpf_existente = db.query(Usuario).filter(Usuario.cpf == usuario.cpf).first()
         if cpf_existente:
-           raise HTTPException(status_code=500, detail=f"CPF N° '{usuario.cpf}' já cadastrado em outro usuário.")
+            raise HTTPException(status_code=500, detail=f"Erro ao processar a requisição! CPF N° '{usuario.cpf}' já cadastrado em outro usuário.")
                 
-        # Cria o novo usuário usando o DTO de entrada
-        novo_usuario = Usuario(
-            nome=usuario.nome,
-            perfil_usuario=usuario.perfil_usuario,
-            email=usuario.email, 
-            cpf=usuario.cpf,
-            telefone=usuario.telefone,
-            senha=usuario.senha,
-            cep=usuario.cep,
-            rua=usuario.rua,
-            numero=usuario.numero,
-            bairro=usuario.bairro,
-            complemento=usuario.complemento,
-            cidade=usuario.cidade,
-            estado=usuario.estado,
-        )
-        
-        # Adiciona o usuário ao banco de dados
+        novo_usuario = Usuario(**usuario.dict())
         db.add(novo_usuario)
         db.commit()
         db.refresh(novo_usuario)
 
-        # Retorna a resposta com o DTO de saída (UsuarioResposta)
-        return novo_usuario  
+        resposta_sucesso = UsuarioResposta.from_orm(novo_usuario)
+        return resposta_sucesso
     except HTTPException as e:
-        raise e  # Relevanta a exceção HTTPException específica
+        raise e
     except Exception as e:
-        handle_create_user_error(db, e)  # Usa o novo handler
+        handle_create_user_error(db, e)
 
-# Função para atualizar um usuário por id  
+# Função para atualizar um usuario
 @router.put("/usuarios/{usuario_id}", response_model=UsuarioResposta)
-def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depends(get_db)):
-    # Busca o usuário pelo ID no banco de dados
+async def atualizar_usuario(usuario_id: int, usuario: UsuarioCriar, db: Session = Depends(get_db)):
     usuario_existente = db.query(Usuario).filter(Usuario.id == usuario_id).first()
-
     if not usuario_existente:
-       raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
     for field, value in usuario.dict(exclude_unset=True).items():
         setattr(usuario_existente, field, value)
 
-    db.add(usuario_existente)  
-    db.commit()                
-    db.refresh(usuario_existente) 
- 
-    return usuario_existente
+    db.add(usuario_existente)
+    db.commit()
+    db.refresh(usuario_existente)
 
-# Função para atualizar um usuário por id   
+    resposta_sucesso = UsuarioResposta.from_orm(usuario_existente)
+    return resposta_sucesso
+
+# Função para deletar um usuário por id   
 @router.delete("/usuarios/{usuario_id}", status_code=200)
 async def deletar_usuario(usuario_id: int, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail=f"Erro ao processar a requisição! Usuário com ID {usuario_id} não encontrado.")
     
-    if not UsuarioResposta:
-        # Lançando a exceção que será tratada no error_handlers.py
-        raise HTTPException(status_code=404, detail=f"Usuário com ID {usuario_id} não encontrado")
-
-    # Remove o usuário
     db.delete(usuario)
     db.commit()
     
-    # Retorna apenas uma mensagem de sucesso
-    return {"message": f"Usuário com ID {usuario_id} deletado com sucesso!"}  
+    return {"message": f"Usuário com ID {usuario_id} deletado com sucesso!"}

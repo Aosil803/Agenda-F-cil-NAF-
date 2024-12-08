@@ -15,6 +15,7 @@ async def get_adminNaf(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Nenhum Administrador NAF encontrado.")
     return adminNaf
 
+# Função para retornar o administradores Naf pelo id
 @router.get("/adminNaf/{adminNaf_id}", response_model=AdminNafResposta)
 async def get_adminNaf(adminNaf_id: int, db: Session = Depends(get_db)):
     adminNaf = db.query(AdminNaf).filter(AdminNaf.id == adminNaf_id).first()
@@ -29,19 +30,20 @@ async def criar_admin_naf(adminNaf: AdminNafCriar, db: Session = Depends(get_db)
         # Verificar se a matrícula já existe
         matricula_existente = db.query(AdminNaf).filter(AdminNaf.matricula == adminNaf.matricula).first()
         if matricula_existente:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Matrícula '{adminNaf.matricula}' já cadastrada em outro administrador.")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Erro ao processar a requisição! Matrícula '{adminNaf.matricula}' já cadastrada em outro administrador.")
         
         # Criar novo administrador
         novo_admin = AdminNaf(
             nome=adminNaf.nome,
             matricula=adminNaf.matricula,
+            polo=adminNaf.polo,
+            telefone=adminNaf.telefone,
             email=adminNaf.email,
             senha=adminNaf.senha,
             perfil_admin=adminNaf.perfil_admin,
-            login_id=adminNaf.login_id  # Incluindo o campo login_id
         )
 
-        # Adiciona administrador no banco de dados
+       
         db.add(novo_admin)
         db.commit()
         db.refresh(novo_admin)  

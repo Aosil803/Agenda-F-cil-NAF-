@@ -62,6 +62,8 @@ async def validation_exception_handler(request: Request, exc: Exception):
                     errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: ['Morador Local', 'Colaborador Unifeso', 'Aluno Unifeso', 'Incrito no MEI', 'Micro Prod. Rural'].")
                 elif field == 'perfil_admin':
                     errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: ['Estudante', 'Professor', 'Colaborador'].")
+                elif field == 'perfil_admin':
+                    errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido. Deve ser um dos valores: ['Teresópolis', 'Petrópolis', 'Magé', 'Saquarema'].")    
                 elif field == 'turno':
                     errors.append(f"Erro ao processar a requisição! Campo '{field}' inválido. Deve ser 'manhã' ou 'tarde'.")
                 elif field == 'hora':

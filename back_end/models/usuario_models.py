@@ -22,6 +22,6 @@ class Usuario(Base):
     estado = Column(String, nullable=False)
     telefone = Column(String, nullable=True)
     data_criacao = Column(Date, default=datetime.utcnow)
-    login_id = Column(Integer, ForeignKey('login.id_login'))  # Atualizando referência para login.id_login
-    login = relationship("Login")  # Relacionamento com login
-    agenda = relationship("Agenda", back_populates="usuario", uselist=False)  # Relacionamento com Agenda (1:1)
+    id_login = Column(Integer, ForeignKey('login.id_login')) 
+    login = relationship("Login") 
+    agenda = relationship("Agenda", back_populates="usuario", uselist=False) 

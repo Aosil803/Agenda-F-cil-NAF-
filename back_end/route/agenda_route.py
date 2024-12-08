@@ -32,12 +32,10 @@ async def get_agenda(agenda_id: int, db: Session = Depends(get_db)):
 @router.post("/agenda/", response_model=AgendaResposta)
 def criar_horario(agenda: AgendaCriar, db: Session = Depends(get_db)):
     try:
-        # Verifica se a matrícula fornecida corresponde a um AdminNaf existente
         admin = db.query(AdminNaf).filter(AdminNaf.matricula == agenda.matricula).first()
         if not admin:
             raise HTTPException(status_code=404, detail="Administrador não encontrado para a matrícula fornecida.")
 
-        # Verifica se o horário já existe
         horario = db.query(Agenda).filter(
             Agenda.ano == agenda.ano,
             Agenda.mes == agenda.mes,
@@ -45,11 +43,9 @@ def criar_horario(agenda: AgendaCriar, db: Session = Depends(get_db)):
             Agenda.turno == agenda.turno,
             Agenda.hora == agenda.hora
         ).first()
-
-        if horario is not None:
+        if horario:
             raise HTTPException(status_code=400, detail="Horário com esses dados já existe no Banco de Dados.")
 
-        # Cria novo horário associado ao AdminNaf
         novo_horario = Agenda(
             ano=agenda.ano,
             mes=agenda.mes,
@@ -62,7 +58,7 @@ def criar_horario(agenda: AgendaCriar, db: Session = Depends(get_db)):
         db.add(novo_horario)
         db.commit()
         db.refresh(novo_horario)
-        
+
         return novo_horario
     except HTTPException as e:
         raise e
@@ -89,7 +85,6 @@ async def deletar_agendamento(agenda_id: int, db: Session = Depends(get_db)):
 @router.post("/agendamento/", response_model=AgendamentoResposta)
 def criar_agendamento(agenda: AgendamentoCriar, db: Session = Depends(get_db), usuario_id: int = Depends(get_usuario_id)):
     try:
-        # Verificar se o horário existe
         horario = db.query(Agenda).filter(
             Agenda.ano == agenda.ano,
             Agenda.mes == agenda.mes,
@@ -97,24 +92,21 @@ def criar_agendamento(agenda: AgendamentoCriar, db: Session = Depends(get_db), u
             Agenda.hora == agenda.hora,
             Agenda.turno == agenda.turno
         ).first()
-
         if not horario:
             raise HTTPException(status_code=422, detail="Horário não encontrado para agendamento.")
-
         if not horario.status:
             raise HTTPException(status_code=422, detail="Horário já se encontra ocupado.")
 
-        # Atualizar o horário
         horario.status = False
-        horario.usuario_id = usuario_id  # Setar o ID do usuário identificado
+        horario.usuario_id = usuario_id
         horario.data_agendamento = datetime.utcnow()
 
         db.commit()
         db.refresh(horario)
 
-        return horario  # Retorno da resposta no modelo
-
+        return horario
     except HTTPException as e:
         raise e
     except Exception as e:
         handle_database_error(db, e)
+

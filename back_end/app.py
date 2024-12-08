@@ -11,14 +11,13 @@ from back_end.utils.error_handlers import http_exception_handler, validation_exc
 # Instanciação do aplicativo FastAPI
 app = FastAPI()
 
-# Configuração do logging
+
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-# Chama a função de criação das tabelas durante o evento de startup do FastAPI
 @app.on_event("startup")
 async def startup():
-    create_tables()  # Cria as tabelas quando o aplicativo for iniciado
+    create_tables()  
 
 # Registro dos handlers de exceção
 app.add_exception_handler(HTTPException, http_exception_handler)

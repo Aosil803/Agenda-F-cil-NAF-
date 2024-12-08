@@ -13,6 +13,59 @@ class AgendaCriar(BaseModel):
     turno: str
     hora: str
 
+    # Validação do mês
+    @validator('mes')
+    def validar_mes(cls, mes):
+        meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+        if mes not in meses_validos:
+            formatos_validos = ", ".join([f'"{m}"' for m in meses_validos])
+            raise ValueError(f"inválido ou ausente, formatos válidos [{formatos_validos}]")
+        return mes
+
+    # Validação do dia
+    @validator('dia')
+    def validar_dia(cls, dia, values):
+        ano = values.get("ano")
+        mes = values.get("mes")
+
+        if not ano or not mes:
+            return dia
+
+        meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+        mes_num = meses_validos.index(mes) + 1
+        max_dias = monthrange(ano, mes_num)[1]
+
+        if dia < 1 or dia > max_dias:
+            raise ValueError(f"Para o mês de {mes}, o dia deve ser entre 1 a {max_dias}")
+
+        return dia
+
+    # Validação do turno
+    @validator('turno')
+    def validar_turno(cls, turno):
+        if turno not in ["manhã", "tarde"]:
+            raise ValueError("Turno inválido. Deve ser 'manhã' ou 'tarde'.")
+        return turno
+
+    # Validação da hora
+    @validator('hora')
+    def validar_hora(cls, hora, values):
+        turno = values.get("turno")
+        hora_obj = datetime.strptime(hora, "%H:%M").time()
+
+        if turno == "manhã":
+            hora_inicio = datetime.strptime("09:00", "%H:%M").time()
+            hora_fim = datetime.strptime("11:59", "%H:%M").time()
+            if not (hora_inicio <= hora_obj <= hora_fim):
+                raise ValueError(f"Para o turno 'manhã', a hora deve estar entre 9:00 e 11:59.")
+        elif turno == "tarde":
+            hora_inicio = datetime.strptime("12:00", "%H:%M").time()
+            hora_fim = datetime.strptime("18:00", "%H:%M").time()
+            if not (hora_inicio <= hora_obj <= hora_fim):
+                raise ValueError(f"Para o turno 'tarde', a hora deve estar entre 12:00 e 18:00.")
+
+        return hora
+
 class AgendamentoCriar(BaseModel):
     id: Optional[int] = None
     cpf: Optional[str] = None
@@ -94,32 +147,6 @@ class AgendaResposta(BaseModel):
     class Config:
         from_attributes = True
 
-# DTO para agendamento de horário (POST específico)
-# # class Agendamento(BaseModel):    
-# #     cpf: str
-# #     ano: int
-# #     mes: str
-# #     dia: int
-# #     turno: str
-# #     hora: str
-
-# #     # Validação do mês
-# #     @validator('mes')
-# #     def validar_mes(cls, mes):
-# #         meses_validos = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
-# #         if mes not in meses_validos:
-# #             formatos_validos = ", ".join([f'"{m}"' for m in meses_validos])
-# #             raise ValueError(f"inválido ou ausente, formatos válidos [{formatos_validos}]")
-# #         return mes
-
-#     # Validação da hora
-#     @validator('hora')
-#     def validar_hora(cls, hora):
-#         try:
-#             datetime.strptime(hora, "%H:%M")
-#         except ValueError:
-#             raise ValueError("Formato de hora inválido. Deve ser HH:MM.")
-#         return hora
 
 # DTO para resposta do agendamento
 class AgendamentoResposta(BaseModel):
